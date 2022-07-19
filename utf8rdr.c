@@ -3,6 +3,7 @@
 	Copyright (c) 2021-2022 Oscar Elias
 	
 	This file is part of UTF8RDR.
+	
 	UTF8RDR is free software: you can redistribute it and/or modify it
 	under the terms of the GNU General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
@@ -20,16 +21,18 @@
 #include "utf8rdr.h"
 
 // decodificar caracter UTF-8 
-int DecodeUTF8Ch(uint8_t *data, UTFCODEPOINT *code, int blocksize)
+int DecodeUTF8Ch(uint8_t *data, UTFCODEPOINT *code, int datasize)
 {	
 	// verificación de parametros
 	if(!(data&&code)) {
 		return 0;
 	}
 	
-	if(blocksize!=4) {
+	if(datasize!=4) {
 		return 0;
 	}
+	
+	*code=0;
 	
 	// codificación UTF-8 de 1 byte
 	if(!(data[0]&0x80)) {
@@ -40,9 +43,9 @@ int DecodeUTF8Ch(uint8_t *data, UTFCODEPOINT *code, int blocksize)
 	else if((data[0]&0xE0)==0xC0&&
 		(data[1]&0xC0)==0x80)
 	{
-		*code = 
-			(data[0]&0x1F)<<6|
-			(data[1]&0x3F)<<0;
+		*code |= (data[0]&0x1F)<<6; 
+		*code |= (data[1]&0x3F)<<0;
+
 		return 2;
 	}
 	// codificación UTF-8 de 3 bytes
@@ -50,10 +53,9 @@ int DecodeUTF8Ch(uint8_t *data, UTFCODEPOINT *code, int blocksize)
 		(data[1]&0xC0)==0x80&&
 		(data[2]&0xC0)==0x80)
 	{
-		*code =
-			(data[0]&0x0F)<<12|
-			(data[1]&0x3F)<< 6|
-			(data[2]&0x3F)<< 0;
+		*code |= (data[0]&0x0F)<<12;
+		*code |= (data[1]&0x3F)<< 6;
+		*code |= (data[2]&0x3F)<< 0;
 		
 		/* verificar si el codigo decodificado
 		 * corresponde a un caracter real */
@@ -61,6 +63,7 @@ int DecodeUTF8Ch(uint8_t *data, UTFCODEPOINT *code, int blocksize)
 			*code=REPLACEMENT_CHARACTER;
 		if(*code>=0xFDD0&&*code<=0xFDEF) 
 			*code=REPLACEMENT_CHARACTER;
+		
 		return 3;
 	}
 	// codificación UTF-8 de 4 bytes
@@ -69,11 +72,11 @@ int DecodeUTF8Ch(uint8_t *data, UTFCODEPOINT *code, int blocksize)
 		(data[2]&0xC0)==0x80&&
 		(data[3]&0xC0)==0x80)
 	{
-		*code =
-			(data[0]&0x07)<<18|
-			(data[1]&0x3F)<<12|
-			(data[2]&0x3F)<< 6|
-			(data[3]&0x3F)<< 0;
+		*code |= (data[0]&0x07)<<18;
+		*code |= (data[1]&0x3F)<<12;
+		*code |= (data[2]&0x3F)<< 6; 
+		*code |= (data[3]&0x3F)<< 0;
+
 		return 4;
 	}
 	

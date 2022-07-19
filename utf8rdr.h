@@ -42,6 +42,6 @@ typedef uint32_t UTFCODEPOINT;
 void * UTF8StrToUTF16Str(UTF8CH * sequence, size_t len);
 void * UTF8StrToUTF32Str(UTF8CH * sequence, size_t len);
 int EncodeToUTF16Ch(UTFCODEPOINT code, UTF32CH *utf16ch);
-int DecodeUTF8Ch(uint8_t *data, UTFCODEPOINT *code, int blocksize);
+int DecodeUTF8Ch(uint8_t *data, UTFCODEPOINT *code, int datasize);
 
 #endif
