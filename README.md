@@ -114,6 +114,14 @@ acuerdo al orden de bytes que maneja el microprocesador anfitrión y
 se utiliza la función `malloc()` para reservar espacio en memoria para
 las cadenas . No se realiza conversiones de formato UNICODE.
 
+## ¿Cómo usar este software?
+
+Solo incluya este repositorio a su proyecto y enlácelo de la
+siguiente manera:
+
+```C
+#include "utf8rdr.h"
+```
 
 ## Condiciones de uso
 
